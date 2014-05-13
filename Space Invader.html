@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>Space Invader</title>
+<canvas id="ctx" width="500" height="500" style="border:1px solidn #000000;"></canvas>
+<script type="text/javascript">
+
+var ctx = document.getElementById("ctx").getContext("2d");
+ctx.font = '30px Arial';
+var x = 50;
+var y = 40;
+ctx.fillText('Space Invader',x,y);
+
+step = 0;  	// Current step
+steps = 100; // Total number of steps to perform the effect
+accel = 0.05;  // Acceleration
+vX = 1; 	// X velocity
+
+function moveObj(name, Xpix, Ypix) 
+{    
+   	obj = document.getElementById(name);
+	
+	px = parseInt(obj.style.left) + Xpix;		
+	py = parseInt(obj.style.top) + Ypix;
+	obj.style.left = px;
+	obj.style.top = py;
+}
+function fireTorpedo(name)
+{
+// Get the position of the ship
+	var obj = document.getElementById(name);	
+	var px = parseInt(obj.style.left);		
+	var py = parseInt(obj.style.top);
+
+// Fire topredo to the right of the ship
+	var t = document.getElementById("torpedo");
+	t.style.left = px+95;
+	t.style.top = py+38;	
+	
+	step = 0;
+	accel = 0.05;
+	vX=1;
+
+	window.setTimeout("moveTorpedo();", 0);
+}
+
+function moveTorpedo()
+{
+	step++; if(step>=steps) return; // The effect has finished
+	
+// Move torpedo to the right by the given velocity and acceleration	
+	var t = document.getElementById("torpedo");
+	var px = parseInt(t.style.left);	
+	vX+=parseInt(accel); // Increase velocity by the amount of acceleration
+	t.style.left = px + vX;
+	accel+=0.05;
+	
+	window.setTimeout("moveTorpedo();", 0);
+}
+
+function ProcessKeypress(e)
+{
+var myObj = "ship"
+var moveBy = 10;
+if (e.keyCode) keycode=e.keyCode;
+      else keycode=e.which;
+      ch=String.fromCharCode(keycode);
+ if(ch=='a')         moveObj(myObj, -moveBy, 0);
+      else if(ch=='d')    moveObj(myObj, moveBy, 0);
+      else if(ch=='w')    moveObj(myObj, 0, -moveBy);
+      else if(ch=='s')    moveObj(myObj, 0, moveBy);
+      else if(ch==' ')	fireTorpedo(myObj);
+}
+
+</script>
+<body onKeyPress="ProcessKeypress(event);">
+
+<p><img id="ship" style="z-index: 0; left: 300px; position: absolute; top: 250px" 
+	height=72 width=100 align=baseline border=0 hspace=0 src="Space Invaders 3.png"></p>
+
+	<img id="torpedo" style="z-index: 0; left: -100px; position: absolute; top: -100px" 
+src="Avalanche_torpedo.png" width="12" height="12">
+</body>
+</html>
